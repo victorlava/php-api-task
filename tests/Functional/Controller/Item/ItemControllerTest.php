@@ -2,15 +2,16 @@
 
 namespace App\Tests\Functional\Controller\Item;
 
-use App\Entity\Item;
 use App\Repository\ItemRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 class ItemControllerTest extends WebTestCase
 {
+
+    use ItemControllerActionTrait;
 
     protected $client;
 
@@ -56,47 +57,25 @@ class ItemControllerTest extends WebTestCase
 
     public function testCreate()
     {
+        $messageToAssert = 'my message';
 
-        $this->logIn()->createItem('my message')->getItems();
+        $this->logIn()->createItem($messageToAssert)->getItems();
 
-        $this->assertResponseIsSuccessful();
-        $this->assertStringContainsString('my message', $this->client->getResponse()->getContent());
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertStringContainsString($messageToAssert, $this->client->getResponse()->getContent());
     }
 
-    protected function logIn()
+    public function testPatch() {}
+
+    public function testDelete()
     {
-        $this->client->loginUser($this->user);
+        $this->logIn()->createItem('message')->getItems();
+        $this->assertStringContainsString('message', $this->client->getResponse()->getContent());
 
-        return $this;
-    }
+        $item = $this->itemRepository->findOneBy(['data' => 'message']);
 
-    protected function getItems()
-    {
-        $this->client->request('GET', '/item');
+        $this->deleteItem($item->getId());
 
-        return $this;
-    }
-
-    protected function deleteItem(int $id)
-    {
-        $this->client->request('DELETE', '/item/' . $id);
-
-        return $this;
-    }
-
-    protected function createItem(string $data)
-    {
-        $newItemData = ['data' => $data];
-
-        $this->client->request('POST', '/item', $newItemData);
-
-        return $this;
-    }
-
-    protected function updateItem(int $id, string $data)
-    {
-        $this->client->request('PATCH', '/item?id=' . $id . '&data=' . $data);
-
-        return $this;
+        $this->getItems()->assertSame('[]', $this->client->getResponse()->getContent());
     }
 }
