@@ -42,6 +42,18 @@ class ItemControllerTest extends WebTestCase
         $this->user = $this->userRepository->findOneByUsername('john');
     }
 
+    public function testList()
+    {
+        $this->logIn()
+            ->createItem('message1')
+            ->createItem('message2')
+            ->getItems();
+
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertStringContainsString('message1', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('message2', $this->client->getResponse()->getContent());
+    }
+
     public function testCreate()
     {
 
