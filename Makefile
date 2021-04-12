@@ -21,4 +21,4 @@ build:
 tests:
 	docker-compose exec php php bin/console doctrine:migrations:migrate --no-interaction --env=test
 	docker-compose exec php php bin/console doctrine:fixtures:load --no-interaction --env=test
-	docker-compose exec php php vendor/bin/simple-phpunit
+	docker-compose exec php php vendor/bin/simple-phpunit --verbose --testdox
