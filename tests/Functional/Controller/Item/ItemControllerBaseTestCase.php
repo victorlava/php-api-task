@@ -52,16 +52,14 @@ class ItemControllerBaseTestCase extends WebTestCase
 
     protected function tearDown(): void
     {
+        $metaData = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
-        $em = static::$container->get('doctrine')->getManager();
-        $metaData = $em->getMetadataFactory()->getAllMetadata();
-
-        $tool = new SchemaTool($em);
+        $tool = new SchemaTool($this->entityManager);
         $tool->dropSchema($metaData);
         $tool->createSchema($metaData);
 
         $userFixture = static::$container->get(UserFixture::class);
-        $userFixture->load($em);
+        $userFixture->load($this->entityManager);
 
         parent::tearDown();
     }
