@@ -2,7 +2,7 @@
 
 namespace App\Tests\Functional\Controller\Item;
 
-class ItemControllerUnauthorizedAccessTest extends ItemControllerTest
+class ItemControllerUnauthorizedAccessTest extends ItemControllerBaseTestCase
 {
 
     const UNAUTHORIZED_ACCESS_STATUS_CODE = 401;
