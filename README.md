@@ -1,5 +1,11 @@
 # Secure Information Storage REST API
 
+### Quickstart
+* Start docker containers ```make start```
+* Stop docker containers ```make stop```
+* Initialize project ```make init```
+* Run test suite ```make tests```
+
 ### Project setup
 
 * Add `secure-storage.localhost` to your `/etc/hosts`: `127.0.0.1 secure-storage.localhost`
