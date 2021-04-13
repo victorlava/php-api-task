@@ -18,6 +18,13 @@ init:
 build:
 	build/build.sh
 
+fixtures:
+	docker-compose exec php php bin/console doctrine:fixtures:load --no-interaction
+
+cache:
+	docker-compose exec php php bin/console cache:clear --no-interaction
+	docker-compose exec php composer clear-cache
+
 tests:
 	docker-compose exec php php bin/console doctrine:migrations:migrate --no-interaction --env=test
 	docker-compose exec php php vendor/bin/simple-phpunit --verbose --testdox
