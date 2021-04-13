@@ -6,7 +6,9 @@ namespace App\Controller;
 
 use App\Entity\Item;
 use App\Service\ItemService;
+use PHPUnit\Util\Json;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -48,6 +50,36 @@ class ItemController extends AbstractController
         }
 
         $itemService->create($this->getUser(), $data);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/item", name="item_update", methods={"PUT"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function update(Request $request, ItemService $itemService): JsonResponse
+    {
+        $parameters = $request->toArray();
+
+        $id = $parameters['id'] ?? null;
+        $data = $parameters['data'] ?? null;
+
+        if(empty((int) $id)) {
+            return $this->json(['error' => 'No id parameter'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($data)) {
+            return $this->json(['error' => 'No data parameter'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $item = $itemService->get($id);
+
+        if(!$item) {
+            return $this->json(['error' => 'No item'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $itemService->update($item->getId(), $parameters['data']);
 
         return $this->json([]);
     }
