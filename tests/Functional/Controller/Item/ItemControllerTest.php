@@ -26,7 +26,20 @@ class ItemControllerTest extends ItemControllerBaseTestCase
         $this->assertStringContainsString($messageToAssert, $this->client->getResponse()->getContent());
     }
 
-    public function testPatch() {}
+    public function testPatch()
+    {
+        $initialMessage = 'my message';
+        $newMessage = 'new message';
+
+        $this->logIn()->createItem($initialMessage);
+
+        $item = $this->itemRepository->findOneBy(['data' => $initialMessage]);
+
+        $this->updateItem($item->getId(), $newMessage)->getItems();
+
+        $this->assertStringContainsString($newMessage, $this->client->getResponse()->getContent());
+
+    }
 
     public function testDelete()
     {
