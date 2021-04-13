@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use App\DataFixtures\UserFixture;
 
 class ItemControllerBaseTestCase extends WebTestCase
 {
@@ -46,6 +47,9 @@ class ItemControllerBaseTestCase extends WebTestCase
         $this->userRepository = static::$container->get(UserRepository::class);
         $this->itemRepository = static::$container->get(ItemRepository::class);
 
+        $userFixture = static::$container->get(UserFixture::class);
+        $userFixture->load($this->entityManager);
+
         $this->user = $this->userRepository->findOneByUsername('john');
     }
 
@@ -57,9 +61,6 @@ class ItemControllerBaseTestCase extends WebTestCase
         $tool = new SchemaTool($this->entityManager);
         $tool->dropSchema($metaData);
         $tool->createSchema($metaData);
-
-        $userFixture = static::$container->get(UserFixture::class);
-        $userFixture->load($this->entityManager);
 
         parent::tearDown();
 
