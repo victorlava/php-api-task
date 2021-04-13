@@ -45,21 +45,21 @@ class ItemControllerBaseTestCase extends WebTestCase
 
         $this->userRepository = static::$container->get(UserRepository::class);
         $this->itemRepository = static::$container->get(ItemRepository::class);
-        $this->entityManager = static::$container->get(EntityManagerInterface::class);
 
         $this->user = $this->userRepository->findOneByUsername('john');
     }
 
     protected function tearDown(): void
     {
-        $metaData = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        $entityManager = static::$container->get(EntityManagerInterface::class);
+        $metaData = $entityManager->getMetadataFactory()->getAllMetadata();
 
-        $tool = new SchemaTool($this->entityManager);
+        $tool = new SchemaTool($entityManager);
         $tool->dropSchema($metaData);
         $tool->createSchema($metaData);
 
         $userFixture = static::$container->get(UserFixture::class);
-        $userFixture->load($this->entityManager);
+        $userFixture->load($entityManager);
 
         parent::tearDown();
     }
