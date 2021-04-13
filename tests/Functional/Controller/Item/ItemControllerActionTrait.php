@@ -2,6 +2,12 @@
 
 namespace App\Tests\Functional\Controller\Item;
 
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use App\Tests\Model\Response\Item;
+
 trait ItemControllerActionTrait
 {
 
@@ -37,7 +43,9 @@ trait ItemControllerActionTrait
 
     public function updateItem(int $id, string $data): self
     {
-        $this->client->request('PATCH', '/item?id=' . $id . '&data=' . $data);
+        $request = ['id' => $id, 'data' => $data];
+
+        $this->client->request('PUT', '/item', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($request));
 
         return $this;
     }

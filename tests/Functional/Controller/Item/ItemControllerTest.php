@@ -26,7 +26,7 @@ class ItemControllerTest extends ItemControllerBaseTestCase
         $this->assertStringContainsString($messageToAssert, $this->client->getResponse()->getContent());
     }
 
-    public function testPatch()
+    public function testPut()
     {
         $initialMessage = 'my message';
         $newMessage = 'new message';
