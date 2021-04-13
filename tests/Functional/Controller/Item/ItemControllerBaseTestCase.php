@@ -42,6 +42,7 @@ class ItemControllerBaseTestCase extends WebTestCase
     {
         $this->client = static::createClient();
 
+        $this->entityManager = static::$container->get(EntityManagerInterface::class);
         $this->userRepository = static::$container->get(UserRepository::class);
         $this->itemRepository = static::$container->get(ItemRepository::class);
 
@@ -51,16 +52,18 @@ class ItemControllerBaseTestCase extends WebTestCase
     protected function tearDown(): void
     {
         //TODO: to optimize this use TRUNCATE, or move to SQLite DB for tests
-        $entityManager = static::$container->get(EntityManagerInterface::class);
-        $metaData = $entityManager->getMetadataFactory()->getAllMetadata();
+        $metaData = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
-        $tool = new SchemaTool($entityManager);
+        $tool = new SchemaTool($this->entityManager);
         $tool->dropSchema($metaData);
         $tool->createSchema($metaData);
 
         $userFixture = static::$container->get(UserFixture::class);
-        $userFixture->load($entityManager);
+        $userFixture->load($this->entityManager);
 
         parent::tearDown();
+
+        $this->entityManager->close();
+        $this->entityManager = null;
     }
 }
