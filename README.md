@@ -131,7 +131,7 @@ POST /item?data=message
 ### Patch Item
 Updates a secret message for authenticated user. Must specify the message's ```id```. Uses form-data.
 ```
-PATCH /update?id=1&data=message
+PATCH /item?id=1&data=message
 ```
 #### Properties:
 
