@@ -50,6 +50,7 @@ class ItemControllerBaseTestCase extends WebTestCase
 
     protected function tearDown(): void
     {
+        //TODO: to optimize this use TRUNCATE, or move to SQLite DB for tests
         $entityManager = static::$container->get(EntityManagerInterface::class);
         $metaData = $entityManager->getMetadataFactory()->getAllMetadata();
 
