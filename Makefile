@@ -27,7 +27,7 @@ cache:
 
 tests:
 	docker-compose exec php php bin/console doctrine:migrations:migrate --no-interaction --env=test
-	docker-compose exec php php vendor/bin/simple-phpunit --verbose --testdox
+	docker-compose exec php php vendor/bin/simple-phpunit --verbose --testdox  --log-junit=report.xml
 
 unit:
 	docker-compose exec php php vendor/bin/simple-phpunit --verbose --testdox --testsuite=unit
