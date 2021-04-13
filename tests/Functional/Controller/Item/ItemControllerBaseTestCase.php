@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\DataFixtures\UserFixture;
 use Doctrine\ORM\Tools\SchemaTool;
 
 class ItemControllerBaseTestCase extends WebTestCase
