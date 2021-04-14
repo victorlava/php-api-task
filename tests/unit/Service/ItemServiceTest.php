@@ -28,41 +28,42 @@ class ItemServiceTest extends TestCase
      */
     private $itemRepository;
 
+    /**
+     * @var User
+     */
+    private $user;
+
+    /**
+     * @var string
+     */
+    private $data;
+
     public function setUp(): void
     {
         /** @var EntityManagerInterface */
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->itemRepository = $this->createMock(ItemRepository::class);
-        
         $this->itemService = new ItemService($this->itemRepository, $this->entityManager);
+
+        $this->user = $this->createMock(User::class);
+        $this->data = 'message';
     }
 
     public function testCreate(): void
     {
-        /** @var User */
-        $user = $this->createMock(User::class);
-        $data = 'secret data';
-
-        $expectedObject = new Item();
-        $expectedObject->setUser($user);
-        $expectedObject->setData($data);
+        /** @var Item */
+        $expectedObject = $this->mockItem($this->user, $this->data, false);
 
         $this->entityManager->expects($this->once())->method('persist')->with($expectedObject);
         $this->entityManager->expects($this->once())->method('flush');
 
-        $this->itemService->create($user, $data);
+        $this->itemService->create($this->user, $this->data);
     }
 
     public function testGet(): void
     {
-
-        $user = $this->createMock(User::class);
-        $data = 'secret data';
-
-        $item = new Item();
-        $item->setId(1);
-        $item->setUser($user);
-        $item->setData($data);
+        /** @var Item */
+        $item = $this->mockItem($this->user, $this->data);
 
         $this->itemRepository->expects($this->once())->method('find')->with($item->getId());
 
@@ -73,18 +74,26 @@ class ItemServiceTest extends TestCase
 
     public function testUpdate(): void
     {
-        $user = $this->createMock(User::class);
-        $data = 'secret data';
-
-        $item = new Item();
-        $item->setUser($user);
-        $item->setData($data);
-        $item->setId(1);
+        /** @var Item */
+        $item = $this->mockItem($this->user, $this->data);
 
         $this->itemRepository->expects($this->once())->method('find')->with($item->getId());
 
-        $item = $this->itemService->update($item->getId(), 'message');
+        $item = $this->itemService->update($item->getId(), $this->data);
 
         $this->assertEquals(false, $item);
+    }
+
+    private function mockItem(User $user, string $data, bool $shouldSetId = true): Item
+    {
+        /** @var Item */
+        $item = new Item();
+        if($shouldSetId) {
+            $item->setId(1);
+        }
+        $item->setUser($user);
+        $item->setData($data);
+
+        return $item;
     }
 }
