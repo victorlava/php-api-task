@@ -73,7 +73,7 @@ class ItemController extends AbstractController
             return $this->json(['error' => 'No data parameter'], Response::HTTP_BAD_REQUEST);
         }
 
-        if(!$itemService->update((int) $id)) {
+        if(!$itemService->update((int) $id, $data)) {
             return $this->json(['error' => 'No item'], Response::HTTP_BAD_REQUEST);
         }
 
