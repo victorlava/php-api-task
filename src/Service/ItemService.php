@@ -38,6 +38,13 @@ class ItemService
         return $item;
     }
 
+    public function delete(Item $item): void
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($item);
+        $manager->flush();
+    }
+
     public function update(int $id, string $data): bool
     {
         $item = $this->itemRepository->find($id);
