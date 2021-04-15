@@ -80,7 +80,7 @@ class ItemController extends AbstractController
                                 $this->validator->errorCode());
         }
 
-        $item = $itemService->update($request->request->get('id'), $request->request->get('data'));
+        $item = $itemService->update((int) $request->request->get('id'), $request->request->get('data'));
 
         return $this->json([]);
     }
