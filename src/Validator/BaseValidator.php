@@ -2,6 +2,7 @@
 
 namespace App\Validator;
 
+use App\Rule\ValidationRuleBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 class BaseValidator
@@ -9,15 +10,11 @@ class BaseValidator
 
     private $validationRules;
 
-    public function __construct(CallableValidator $validationMethods)
+    public function __construct(ValidationRuleBuilder $ruleBuilder)
     {
-        $this->validate = $validationMethods;
+        $this->validate = new CallableValidator();
         $this->error = '';
-        $this->rules =  ['id' => [    'rules' => ['type' => 'integer', 'required' => 'true'],
-                                        'error' => 'No item'],
-                                        'data' => [ 'rules' => ['type' => 'string', 'required' => 'true', 'maxlength' => 255],
-                                            'error' => 'No data parameter']
-                                    ];
+        $this->rules = $ruleBuilder->getRules();
 
     }
 

@@ -32,6 +32,11 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
         $this->errorMessages = [];
     }
 
+    public function getRules(): array
+    {
+        return $this->rules;
+    }
+
     public function fields(array $fieldNames): self
     {
         $this->fieldNames = $fieldNames;

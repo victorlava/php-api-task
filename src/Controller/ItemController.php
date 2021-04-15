@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Item;
+use App\Rule\ValidationRuleBuilder;
 use App\Service\ItemService;
 use App\Validator\BaseValidator;
 use PHPUnit\Util\Json;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Validator\Rule\RuleBuilder;
+use App\Rule\RuleBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,19 +21,14 @@ use Symfony\Component\HttpFoundation\Response;
 class ItemController extends AbstractController
 {
 
-    public function __construct(BaseValidator $validator, RuleBuilder $ruleBuilder)
+    public function __construct(ValidationRuleBuilder $ruleBuilder)
     {
-        $this->validator = $validator;
+        $ruleBuilder->fields(['id', 'data'])->required();
+        $ruleBuilder->field('id')->type('integer')->errorMessage('No id parameter');
+        $ruleBuilder->field('data')->type('string')->errorMessage('No data parameter');
+        $ruleBuilder->build();
 
-        $this->rule = $ruleBuilder;
-
-        $this->rule->fields(['id', 'data'])->required();
-
-        $this->rule->field('id')->type('integer')->errorMessage('No id parameter');
-        $this->rule->field('data')->type('string')->errorMessage('No id parameter');
-
-        $this->rule->build();
-
+        $this->validator = new BaseValidator($ruleBuilder);
     }
 
     /**
