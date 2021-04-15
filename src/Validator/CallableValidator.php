@@ -6,21 +6,24 @@ namespace App\Validator;
 class CallableValidator
 {
 
-    public function type(string $varType, string $fieldValue): bool
+    public function type(string $varType, $fieldValue): bool
     {
-        if(is_numeric($fieldValue)) { //convert to number if possible and then check the type
-            $fieldValue = (int) $fieldValue;
+
+        if($varType == 'integer') {
+            if(is_numeric($fieldValue)) { //convert to number if possible and then check the type
+                $fieldValue = (int) $fieldValue;
+            }
         }
 
         return gettype($fieldValue) === $varType ? true : false;
     }
 
-    public function required(string $required, string $fieldValue): bool
+    public function required(string $required, $fieldValue): bool
     {
-        return empty($fieldValue) && !$required ? true : false;
+        return !empty($fieldValue) ? true : false;
     }
 
-    public function maxLength(string $maxLength, string $fieldValue): bool
+    public function maxLength(string $maxLength, $fieldValue): bool
     {
         return strlen($fieldValue) > $maxLength ? false : true;
     }
