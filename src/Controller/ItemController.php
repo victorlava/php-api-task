@@ -70,7 +70,7 @@ class ItemController extends AbstractController
      * @Route("/item", name="item_update", methods={"PUT"})
      * @IsGranted("ROLE_USER")
      */
-    public function up  date(Request $request, ItemService $itemService): JsonResponse
+    public function update(Request $request, ItemService $itemService): JsonResponse
     {
 
         $this->validator->builder->field('item')->disable();
