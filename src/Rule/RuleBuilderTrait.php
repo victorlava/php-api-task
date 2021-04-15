@@ -9,6 +9,11 @@ trait RuleBuilderTrait
         return in_array($fieldName, $this->fieldsRequired) ? true : false;
     }
 
+    public function isDisabled(string $fieldName): bool
+    {
+        return in_array($fieldName, $this->rulesToDisable) ? true : false;
+    }
+
     public function hasType(string $fieldName): bool
     {
         return array_key_exists($fieldName, $this->fieldsType) ? true : false;
@@ -23,6 +28,13 @@ trait RuleBuilderTrait
     {
         if($this->isRequired($fieldName)) {
             $this->rules[$fieldName]['rules']['required'] = 'true';
+        }
+    }
+
+    public function setDisabled(string $fieldName): void
+    {
+        if($this->isDisabled($fieldName)) {
+            unset($this->rules[$fieldName]);
         }
     }
 

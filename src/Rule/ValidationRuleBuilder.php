@@ -16,7 +16,9 @@ class ValidationRuleBuilder extends AbstractRuleBuilder
             $this->setRequired($fieldName);
             $this->setError($fieldName);
             $this->setType($fieldName);
+            $this->setDisabled($fieldName);
         }
+
     }
 
 }

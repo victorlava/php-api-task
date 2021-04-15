@@ -11,6 +11,9 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
     public $rules;
 
     /** @var array */
+    public $rulesToDisable;
+
+    /** @var array */
     public $fieldNames;
 
     /** @var array */
@@ -26,6 +29,7 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
     {
         $this->selectedField = '';
         $this->rules = [];
+        $this->rulesToDisable = [];
         $this->fieldNames = [];
         $this->fieldsRequired = [];
         $this->fieldsType = [];
@@ -37,6 +41,22 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
         return $this->rules;
     }
 
+    public function getError(string $fieldName): string
+    {
+
+        if(isset($this->rules[$fieldName]['error'])) {
+            return $this->rules[$fieldName]['error'];
+        }
+
+        return $this->findDefaultError();
+    }
+
+    public function findDefaultError(): string
+    {
+        $error = array_search('error', $this->rules);
+        return $error ?? '';
+    }
+
     public function fields(array $fieldNames): self
     {
         $this->fieldNames = $fieldNames;
@@ -46,6 +66,12 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
     public function field(string $fieldName): self
     {
         $this->selectedField = $fieldName;
+        return $this;
+    }
+
+    public function disable(): self
+    {
+        $this->rulesToDisable[] = $this->selectedField;
         return $this;
     }
 
