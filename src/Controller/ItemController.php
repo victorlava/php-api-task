@@ -19,14 +19,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ItemController extends AbstractController
 {
+    /** @var BaseValidator  */
+    private $validator;
 
-    public function __construct(ValidationRuleBuilder $ruleBuilder)
+    public function __construct(ValidationRuleBuilder $rules)
     {
-        $ruleBuilder->fields(['id', 'data'])->required();
-        $ruleBuilder->field('id')->type('integer')->error('No id parameter', Response::HTTP_BAD_REQUEST);
-        $ruleBuilder->field('data')->type('string')->error('No data parameter', Response::HTTP_BAD_REQUEST);
-
-        $this->validator = new BaseValidator($ruleBuilder);
+        $this->validator = new BaseValidator($this->setDefaultValidationRules($rules));
     }
 
     /**
@@ -53,9 +51,10 @@ class ItemController extends AbstractController
      * @Route("/item", name="item_create", methods={"POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function create(Request $request, ItemService $itemService, ValidationRuleBuilder $ruleBuilder): JsonResponse
+    public function create(Request $request, ItemService $itemService): JsonResponse
     {
         $this->validator->builder->field('id')->disable();
+        $this->validator->builder->field('item')->disable();
 
         if(!$this->validator->isRequestValid($request)) {
             return $this->json( $this->validator->errorMessage(),
@@ -71,20 +70,17 @@ class ItemController extends AbstractController
      * @Route("/item", name="item_update", methods={"PUT"})
      * @IsGranted("ROLE_USER")
      */
-    public function update(Request $request, ItemService $itemService): JsonResponse
+    public function up  date(Request $request, ItemService $itemService): JsonResponse
     {
+
+        $this->validator->builder->field('item')->disable();
 
         if(!$this->validator->isRequestValid($request)) {
             return $this->json( $this->validator->errorMessage(),
                                 $this->validator->errorCode());
         }
 
-        $id = $parameters['id'] ?? null;
-        $data = $parameters['data'] ?? null;
-
-        if(!$itemService->update((int) $id, $data)) {
-            return $this->json(['error' => 'No item'], Response::HTTP_BAD_REQUEST);
-        }
+        $item = $itemService->update($request->request->get('id'), $request->request->get('data'));
 
         return $this->json([]);
     }
@@ -93,24 +89,32 @@ class ItemController extends AbstractController
      * @Route("/item/{id}", name="items_delete", methods={"DELETE"})
      * @IsGranted("ROLE_USER")
      */
-    public function delete(Request $request, int $id, ItemService $itemService)
+    public function delete(Request $request, int $id, ItemService $itemService): JsonResponse
     {
-        $this->validator->ruleBuilder->field('id')->disable();
+        $this->validator->builder->field('data')->disable();
+
+        $item = $itemService->get($id);
+
+        $request->request->add(['id' => $id, 'item' => $item]);
 
         if(!$this->validator->isRequestValid($request)) {
             return $this->json( $this->validator->errorMessage(),
                                 $this->validator->errorCode());
         }
 
-        $item = $itemService->get($id);
-
-        if ($item === null) {
-            return $this->json(['error' => 'No item'], Response::HTTP_BAD_REQUEST);
-        }
-
-        $itemService->delete($item->id);
+        $itemService->delete($item);
 
         return $this->json([]);
+    }
+
+    private function setDefaultValidationRules(ValidationRuleBuilder $rules): ValidationRuleBuilder
+    {
+        $rules->fields(['id', 'data', 'item'])->required();
+        $rules->field('id')->type('integer')->error('No id parameter', Response::HTTP_BAD_REQUEST);
+        $rules->field('data')->type('string')->error('No data parameter', Response::HTTP_BAD_REQUEST);
+        $rules->field('item')->type('object')->error('No item', Response::HTTP_BAD_REQUEST);
+
+        return $rules;
     }
 
 }
