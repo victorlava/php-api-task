@@ -13,32 +13,35 @@ class BaseValidator
     public function __construct(ValidationRuleBuilder $ruleBuilder)
     {
         $this->validate = new CallableValidator();
-        $this->error = '';
-        $this->rules = $ruleBuilder->getRules();
-
+        $this->error = false;
+        $this->builder = $ruleBuilder;
     }
 
     public function isRequestValid(Request $request): bool
     {
+
+        $this->builder->build();
+
         $index = 0;
 
-        foreach($request->request->keys() as $fieldName)
+        foreach($this->builder->getRules() as $fieldName => $fieldRules)
         {
             $keyIndex = $index;
-            $rules = $this->rules[$fieldName]['rules']; // if fieldName id then grab rules from fieldnamearray
 
-            foreach($rules as $ruleKey => $ruleValue) {
+            foreach($fieldRules['rules'] as $ruleKey => $ruleValue) {
                 $methodName = $this->createMethodName($ruleKey);
 
-                if(!$this->validate->$methodName($ruleValue, $request->request->get($fieldName))) { // dynamicly calling method and validating the value
-                    $this->setError($this->rules[$fieldName]['error']);
+                if(!$this->validate->$methodName($ruleValue, $request->get($fieldName))) { // dynamicly calling method and validating the value
+                    $this->setError($this->builder->getError($fieldName));
                     break;
                 }
+
             }
+
             $index++;
         }
 
-        return false;
+        return $this->error ? false : true;
     }
 
     public function error()
@@ -48,7 +51,7 @@ class BaseValidator
 
     private function createMethodName(string $ruleName): string
     {
-        return ucfirst($ruleName);
+        return $ruleName;
     }
 
     private function setError($error)
