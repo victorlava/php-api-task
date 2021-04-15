@@ -51,10 +51,13 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
         return $this->findDefaultError();
     }
 
-    public function findDefaultError(): string
+    public function findDefaultError()
     {
-        $error = array_search('error', $this->rules);
-        return $error ?? '';
+//        foreach ($this->rules as $ruleKey => $ruleValue) {
+//            if(isset($this->rules[$ruleKey]['error'])) break;
+//        }
+//
+//        return $this->rules[$ruleKey]['error'];
     }
 
     public function fields(array $fieldNames): self

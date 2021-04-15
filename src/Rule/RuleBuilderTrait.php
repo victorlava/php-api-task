@@ -35,6 +35,7 @@ trait RuleBuilderTrait
     {
         if($this->isDisabled($fieldName)) {
             unset($this->rules[$fieldName]);
+            unset($this->error[$fieldName]);
         }
     }
 
