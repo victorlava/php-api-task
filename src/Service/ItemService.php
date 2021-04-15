@@ -7,22 +7,31 @@ use App\Entity\User;
 use App\Repository\ItemRepository;
 use App\Formatter\ItemFormatter as ItemFormatter;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class ItemService
 {
-    private $entityManager;
-
+    /** @var ItemRepository  */
     private $itemRepository;
 
-    public function __construct(ItemRepository $itemRepository, EntityManagerInterface $entityManager)
+    /** @var EntityManagerInterface  */
+    private $entityManager;
+
+    /** @var LoggerInterface  */
+    private $logger;
+
+    public function __construct(ItemRepository $itemRepository, EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->itemRepository = $itemRepository;
+        $this->logger = $logger;
     }
 
     public function get(int $id): ?Object
     {
         $item = $this->itemRepository->find($id);
+
+        $this->logger->info(__METHOD__ . ' ' . 'getting item');
 
         return !$item ? null : $item;
     }
@@ -36,6 +45,8 @@ class ItemService
             $itemCollection[] = ItemFormatter::transform($item);
         }
 
+        $this->logger->info(__METHOD__ . ' ' . 'getting item list');
+
         return $itemCollection;
     }
 
@@ -48,6 +59,8 @@ class ItemService
         $this->entityManager->persist($item);
         $this->entityManager->flush();
 
+        $this->logger->info(__METHOD__ . ' ' . 'creating item');
+
         return $item;
     }
 
@@ -55,6 +68,8 @@ class ItemService
     {
         $this->entityManager->remove($item);
         $this->entityManager->flush();
+
+        $this->logger->info(__METHOD__ . ' ' . 'deleting item');
     }
 
     public function update(int $id, string $data): bool
@@ -65,6 +80,8 @@ class ItemService
             $item->setData($data);
 
             $this->entityManager->flush();
+
+            $this->logger->info(__METHOD__ . ' ' . 'updating item');
 
             return true;
         }
