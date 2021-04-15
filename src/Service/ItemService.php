@@ -40,9 +40,8 @@ class ItemService
 
     public function delete(Item $item): void
     {
-        $manager = $this->getDoctrine()->getManager();
-        $manager->remove($item);
-        $manager->flush();
+        $this->entityManager->remove($item);
+        $this->entityManager->flush();
     }
 
     public function update(int $id, string $data): bool
