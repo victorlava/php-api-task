@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Item;
 use App\Entity\User;
 use App\Repository\ItemRepository;
+use App\Formatter\ItemFormatter as ItemFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ItemService
@@ -24,6 +25,18 @@ class ItemService
         $item = $this->itemRepository->find($id);
 
         return !$item ? null : $item;
+    }
+
+    public function list(User $user): array
+    {
+        $items = $this->itemRepository->findBy(['user' => $user]);
+
+        $itemCollection = [];
+        foreach ($items as $item) {
+            $itemCollection[] = ItemFormatter::transform($item);
+        }
+
+        return $itemCollection;
     }
 
     public function create(User $user, string $data)
