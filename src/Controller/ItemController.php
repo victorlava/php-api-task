@@ -6,17 +6,35 @@ namespace App\Controller;
 
 use App\Entity\Item;
 use App\Service\ItemService;
+use App\Validator\BaseValidator;
 use PHPUnit\Util\Json;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Validator\Rule\RuleBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
 class ItemController extends AbstractController
 {
+
+    public function __construct(BaseValidator $validator, RuleBuilder $ruleBuilder)
+    {
+        $this->validator = $validator;
+
+        $this->rule = $ruleBuilder;
+
+        $this->rule->fields(['id', 'data'])->required();
+
+        $this->rule->field('id')->type('integer')->errorMessage('No id parameter');
+        $this->rule->field('data')->type('string')->errorMessage('No id parameter');
+
+        $this->rule->build();
+
+    }
+
     /**
      * @Route("/item", name="item_list", methods={"GET"})
      * @IsGranted("ROLE_USER")
@@ -41,9 +59,13 @@ class ItemController extends AbstractController
      * @Route("/item", name="item_create", methods={"POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function create(Request $request, ItemService $itemService)
+    public function create(Request $request, ItemService $itemService): JsonResponse
     {
         $data = $request->get('data');
+
+        if(!$this->validator->isRequestValid($request)) {
+            return $this->json($this->validator->error());
+        }
 
         if (empty($data)) {
             return $this->json(['error' => 'No data parameter']);
@@ -84,22 +106,28 @@ class ItemController extends AbstractController
      * @Route("/item/{id}", name="items_delete", methods={"DELETE"})
      * @IsGranted("ROLE_USER")
      */
-    public function delete(Request $request, int $id)
+    public function delete(Request $request, int $id, ItemService $itemService)
     {
         if (empty($id)) {
             return $this->json(['error' => 'No data parameter'], Response::HTTP_BAD_REQUEST);
         }
 
-        $item = $this->getDoctrine()->getRepository(Item::class)->find($id);
+        $item = $itemService->get($id);
 
         if ($item === null) {
             return $this->json(['error' => 'No item'], Response::HTTP_BAD_REQUEST);
         }
 
-        $manager = $this->getDoctrine()->getManager();
-        $manager->remove($item);
-        $manager->flush();
+        $itemService->delete($item->id);
 
         return $this->json([]);
+    }
+
+    private function validator(Request $request)
+    {
+
+
+
+
     }
 }
