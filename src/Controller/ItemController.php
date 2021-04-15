@@ -26,7 +26,6 @@ class ItemController extends AbstractController
         $ruleBuilder->fields(['id', 'data'])->required();
         $ruleBuilder->field('id')->type('integer')->errorMessage('No id parameter');
         $ruleBuilder->field('data')->type('string')->errorMessage('No data parameter');
-        $ruleBuilder->build();
 
         $this->validator = new BaseValidator($ruleBuilder);
     }
@@ -55,19 +54,15 @@ class ItemController extends AbstractController
      * @Route("/item", name="item_create", methods={"POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function create(Request $request, ItemService $itemService): JsonResponse
+    public function create(Request $request, ItemService $itemService, ValidationRuleBuilder $ruleBuilder): JsonResponse
     {
-        $data = $request->get('data');
+        $this->validator->builder->field('id')->disable();
 
         if(!$this->validator->isRequestValid($request)) {
             return $this->json($this->validator->error());
         }
 
-        if (empty($data)) {
-            return $this->json(['error' => 'No data parameter']);
-        }
-
-        $itemService->create($this->getUser(), $data);
+        $itemService->create($this->getUser(), $request->get('data'));
 
         return $this->json([]);
     }
@@ -78,18 +73,13 @@ class ItemController extends AbstractController
      */
     public function update(Request $request, ItemService $itemService): JsonResponse
     {
-        $parameters = $request->toArray();
+
+        if(!$this->validator->isRequestValid($request)) {
+            return $this->json($this->validator->error());
+        }
 
         $id = $parameters['id'] ?? null;
         $data = $parameters['data'] ?? null;
-
-        if(empty((int) $id)) {
-            return $this->json(['error' => 'No id parameter'], Response::HTTP_BAD_REQUEST);
-        }
-
-        if (empty($data)) {
-            return $this->json(['error' => 'No data parameter'], Response::HTTP_BAD_REQUEST);
-        }
 
         if(!$itemService->update((int) $id, $data)) {
             return $this->json(['error' => 'No item'], Response::HTTP_BAD_REQUEST);
@@ -104,9 +94,7 @@ class ItemController extends AbstractController
      */
     public function delete(Request $request, int $id, ItemService $itemService)
     {
-        if (empty($id)) {
-            return $this->json(['error' => 'No data parameter'], Response::HTTP_BAD_REQUEST);
-        }
+        $this->validator->ruleBuilder->field('id')->disable();
 
         $item = $itemService->get($id);
 
@@ -119,11 +107,4 @@ class ItemController extends AbstractController
         return $this->json([]);
     }
 
-    private function validator(Request $request)
-    {
-
-
-
-
-    }
 }
