@@ -21,7 +21,7 @@ trait RuleBuilderTrait
 
     public function hasError(string $fieldName): bool
     {
-        return array_key_exists($fieldName, $this->errorMessages) ? true : false;
+        return array_key_exists($fieldName, $this->error) ? true : false;
     }
 
     public function setRequired(string $fieldName): void
@@ -48,7 +48,7 @@ trait RuleBuilderTrait
     public function setError(string $fieldName): void
     {
         if($this->hasError($fieldName)) {
-            $this->rules[$fieldName]['error']= $this->errorMessages[$fieldName];
+            $this->rules[$fieldName]['error']= $this->error[$fieldName];
         }
     }
 }

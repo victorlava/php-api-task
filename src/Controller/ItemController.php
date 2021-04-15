@@ -24,8 +24,8 @@ class ItemController extends AbstractController
     public function __construct(ValidationRuleBuilder $ruleBuilder)
     {
         $ruleBuilder->fields(['id', 'data'])->required();
-        $ruleBuilder->field('id')->type('integer')->errorMessage('No id parameter');
-        $ruleBuilder->field('data')->type('string')->errorMessage('No data parameter');
+        $ruleBuilder->field('id')->type('integer')->error('No id parameter', Response::HTTP_BAD_REQUEST);
+        $ruleBuilder->field('data')->type('string')->error('No data parameter', Response::HTTP_BAD_REQUEST);
 
         $this->validator = new BaseValidator($ruleBuilder);
     }
@@ -59,7 +59,8 @@ class ItemController extends AbstractController
         $this->validator->builder->field('id')->disable();
 
         if(!$this->validator->isRequestValid($request)) {
-            return $this->json($this->validator->error());
+            return $this->json( $this->validator->errorMessage(),
+                                $this->validator->errorCode());
         }
 
         $itemService->create($this->getUser(), $request->get('data'));
@@ -75,7 +76,8 @@ class ItemController extends AbstractController
     {
 
         if(!$this->validator->isRequestValid($request)) {
-            return $this->json($this->validator->error());
+            return $this->json( $this->validator->errorMessage(),
+                                $this->validator->errorCode());
         }
 
         $id = $parameters['id'] ?? null;
@@ -95,6 +97,11 @@ class ItemController extends AbstractController
     public function delete(Request $request, int $id, ItemService $itemService)
     {
         $this->validator->ruleBuilder->field('id')->disable();
+
+        if(!$this->validator->isRequestValid($request)) {
+            return $this->json( $this->validator->errorMessage(),
+                                $this->validator->errorCode());
+        }
 
         $item = $itemService->get($id);
 

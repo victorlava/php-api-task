@@ -23,7 +23,7 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
     public $fieldsType;
 
     /** @var array */
-    public $errorMessages;
+    public $error;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
         $this->fieldNames = [];
         $this->fieldsRequired = [];
         $this->fieldsType = [];
-        $this->errorMessages = [];
+        $this->error = [];
     }
 
     public function getRules(): array
@@ -41,7 +41,7 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
         return $this->rules;
     }
 
-    public function getError(string $fieldName): string
+    public function getError(string $fieldName): array
     {
 
         if(isset($this->rules[$fieldName]['error'])) {
@@ -87,9 +87,11 @@ abstract class AbstractRuleBuilder implements RuleBuilderInterface
         return $this;
     }
 
-    public function errorMessage(string $message): self
+    public function error(string $message, int $code): self
     {
-        $this->errorMessages[$this->selectedField] = $message;
+        $this->error[$this->selectedField]['message'] = $message;
+        $this->error[$this->selectedField]['code'] = $code;
+
         return $this;
     }
 }

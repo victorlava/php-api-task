@@ -13,7 +13,9 @@ class BaseValidator
     public function __construct(ValidationRuleBuilder $ruleBuilder)
     {
         $this->validate = new CallableValidator();
-        $this->error = false;
+        $this->isValid = false;
+        $this->errorMessage = '';
+        $this->errorCode = '';
         $this->builder = $ruleBuilder;
     }
 
@@ -36,17 +38,23 @@ class BaseValidator
                     break;
                 }
 
+                $this->isValid = true;
             }
 
             $index++;
         }
 
-        return $this->error ? false : true;
+        return $this->isValid;
     }
 
-    public function error()
+    public function errorMessage(): array
     {
-        return ['error' => $this->getError()];
+        return ['error' => $this->getErrorMessage()];
+    }
+
+    public function errorCode(): int
+    {
+        return $this->getErrorCode();
     }
 
     private function createMethodName(string $ruleName): string
@@ -54,13 +62,25 @@ class BaseValidator
         return $ruleName;
     }
 
-    private function setError($error)
+    private function setError(array $error): void
     {
-        $this->error = $error;
+        $this->errorMessage = $error['message'];
+        $this->errorCode = $error['code'];
+        $this->isValid = false;
     }
 
-    private function getError()
+    private function setErrorCode(int $code): void
     {
-        return $this->error;
+        $this->errorCode = $code;
+    }
+
+    private function getErrorMessage()
+    {
+        return $this->errorMessage;
+    }
+
+    private function getErrorCode()
+    {
+        return $this->errorCode;
     }
 }
