@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="11" assertions="17" errors="0" failures="0" skipped="0" time="22.602065">
-    <testsuite name="functional" tests="8" assertions="12" errors="0" failures="0" skipped="0" time="22.500267">
-      <testsuite name="App\Tests\Functional\Controller\Item\ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" tests="4" assertions="8" errors="0" failures="0" skipped="0" time="16.299045">
-        <testcase name="testList" class="App\Tests\Functional\Controller\Item\ItemControllerTest" classname="App.Tests.Functional.Controller.Item.ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" line="7" assertions="3" time="13.644340"/>
-        <testcase name="testCreate" class="App\Tests\Functional\Controller\Item\ItemControllerTest" classname="App.Tests.Functional.Controller.Item.ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" line="19" assertions="2" time="0.774843"/>
-        <testcase name="testPut" class="App\Tests\Functional\Controller\Item\ItemControllerTest" classname="App.Tests.Functional.Controller.Item.ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" line="29" assertions="1" time="0.913493"/>
-        <testcase name="testDelete" class="App\Tests\Functional\Controller\Item\ItemControllerTest" classname="App.Tests.Functional.Controller.Item.ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" line="44" assertions="2" time="0.966369"/>
+  <testsuite name="" tests="11" assertions="16" errors="1" failures="0" skipped="0" time="24.298037">
+    <testsuite name="functional" tests="8" assertions="11" errors="1" failures="0" skipped="0" time="24.138449">
+      <testsuite name="App\Tests\Functional\Controller\Item\ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" tests="4" assertions="7" errors="1" failures="0" skipped="0" time="17.282260">
+        <testcase name="testList" class="App\Tests\Functional\Controller\Item\ItemControllerTest" classname="App.Tests.Functional.Controller.Item.ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" line="7" assertions="3" time="14.663003"/>
+        <testcase name="testCreate" class="App\Tests\Functional\Controller\Item\ItemControllerTest" classname="App.Tests.Functional.Controller.Item.ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" line="19" assertions="2" time="0.797984"/>
+        <testcase name="testPut" class="App\Tests\Functional\Controller\Item\ItemControllerTest" classname="App.Tests.Functional.Controller.Item.ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" line="29" assertions="0" time="0.792852">
+          <error type="Error">App\Tests\Functional\Controller\Item\ItemControllerTest::testPut
+Error: Call to undefined method Symfony\Component\HttpFoundation\Request::toArray()
+
+/app/src/Controller/ItemController.php:63
+/app/vendor/symfony/http-kernel/HttpKernel.php:157
+/app/vendor/symfony/http-kernel/HttpKernel.php:79
+/app/vendor/symfony/http-kernel/Kernel.php:196
+/app/vendor/symfony/http-kernel/HttpKernelBrowser.php:63
+/app/vendor/symfony/framework-bundle/KernelBrowser.php:159
+/app/vendor/symfony/browser-kit/AbstractBrowser.php:384
+/app/tests/Functional/Controller/Item/ItemControllerActionTrait.php:48
+/app/tests/functional/Controller/Item/ItemControllerTest.php:38
+</error>
+        </testcase>
+        <testcase name="testDelete" class="App\Tests\Functional\Controller\Item\ItemControllerTest" classname="App.Tests.Functional.Controller.Item.ItemControllerTest" file="/app/tests/functional/Controller/Item/ItemControllerTest.php" line="44" assertions="2" time="1.028421"/>
       </testsuite>
-      <testsuite name="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" tests="4" assertions="4" errors="0" failures="0" skipped="0" time="6.201222">
-        <testcase name="testListReturns401ForUnauthorizedUser" class="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" classname="App.Tests.Functional.Controller.Item.ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" line="10" assertions="1" time="1.619914"/>
-        <testcase name="testPatchReturns401ForUnauthorizedUser" class="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" classname="App.Tests.Functional.Controller.Item.ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" line="15" assertions="1" time="1.553811"/>
-        <testcase name="testCreateReturns401ForUnauthorizedUser" class="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" classname="App.Tests.Functional.Controller.Item.ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" line="20" assertions="1" time="1.506036"/>
-        <testcase name="testDeleteReturns401ForUnauthorizedUser" class="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" classname="App.Tests.Functional.Controller.Item.ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" line="25" assertions="1" time="1.521461"/>
+      <testsuite name="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" tests="4" assertions="4" errors="0" failures="0" skipped="0" time="6.856189">
+        <testcase name="testListReturns401ForUnauthorizedUser" class="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" classname="App.Tests.Functional.Controller.Item.ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" line="10" assertions="1" time="2.056875"/>
+        <testcase name="testPatchReturns401ForUnauthorizedUser" class="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" classname="App.Tests.Functional.Controller.Item.ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" line="15" assertions="1" time="1.611704"/>
+        <testcase name="testCreateReturns401ForUnauthorizedUser" class="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" classname="App.Tests.Functional.Controller.Item.ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" line="20" assertions="1" time="1.597963"/>
+        <testcase name="testDeleteReturns401ForUnauthorizedUser" class="App\Tests\Functional\Controller\Item\ItemControllerUnauthorizedAccessTest" classname="App.Tests.Functional.Controller.Item.ItemControllerUnauthorizedAccessTest" file="/app/tests/functional/Controller/Item/ItemControllerUnauthorizedAccessTest.php" line="25" assertions="1" time="1.589647"/>
       </testsuite>
     </testsuite>
-    <testsuite name="unit" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.101798">
-      <testsuite name="App\Tests\Unit\ItemServiceTest" file="/app/tests/unit/Service/ItemServiceTest.php" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.101798">
-        <testcase name="testCreate" class="App\Tests\Unit\ItemServiceTest" classname="App.Tests.Unit.ItemServiceTest" file="/app/tests/unit/Service/ItemServiceTest.php" line="52" assertions="1" time="0.097796"/>
-        <testcase name="testGet" class="App\Tests\Unit\ItemServiceTest" classname="App.Tests.Unit.ItemServiceTest" file="/app/tests/unit/Service/ItemServiceTest.php" line="63" assertions="2" time="0.002000"/>
-        <testcase name="testUpdate" class="App\Tests\Unit\ItemServiceTest" classname="App.Tests.Unit.ItemServiceTest" file="/app/tests/unit/Service/ItemServiceTest.php" line="75" assertions="2" time="0.002002"/>
+    <testsuite name="unit" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.159588">
+      <testsuite name="App\Tests\Unit\ItemServiceTest" file="/app/tests/unit/Service/ItemServiceTest.php" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.159588">
+        <testcase name="testCreate" class="App\Tests\Unit\ItemServiceTest" classname="App.Tests.Unit.ItemServiceTest" file="/app/tests/unit/Service/ItemServiceTest.php" line="52" assertions="1" time="0.154692"/>
+        <testcase name="testGet" class="App\Tests\Unit\ItemServiceTest" classname="App.Tests.Unit.ItemServiceTest" file="/app/tests/unit/Service/ItemServiceTest.php" line="63" assertions="2" time="0.002833"/>
+        <testcase name="testUpdate" class="App\Tests\Unit\ItemServiceTest" classname="App.Tests.Unit.ItemServiceTest" file="/app/tests/unit/Service/ItemServiceTest.php" line="75" assertions="2" time="0.002063"/>
       </testsuite>
     </testsuite>
   </testsuite>
