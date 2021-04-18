@@ -9,6 +9,7 @@ RUN apt-get update -yqq && \
     gzip \
     libzip-dev \
     libicu-dev \
+    redis-server \
     nano
 
 RUN docker-php-ext-configure intl 
