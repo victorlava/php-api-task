@@ -1,9 +1,16 @@
 snc_redis:
+    session:
+        client: session
+        ttl: 1200
     clients:
         default:
             type: predis
             alias: default
-            dsn: redis://127.0.0.1:6379
+            dsn: redis://localhost
+        session:
+            type: predis
+            alias: session
+            dsn: redis://localhost
 
 # Define your clients here. The example below connects to database 0 of the default Redis server.
 #
