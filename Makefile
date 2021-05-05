@@ -6,6 +6,9 @@ start:
 stop:
 	docker-compose stop
 
+workers:
+	docker-compose exec php php bin/console messenger:consume
+
 init:
 	docker-compose build
 	docker-compose up -d
