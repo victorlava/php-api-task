@@ -28,6 +28,9 @@ jobs:
       - name: Run the tests
         run: composer install --prefer-dist --no-progress
         
+      - name: Update the lock
+        run: composer update --no-progress
+        
       # Runs a single command using the runners shell
       - name: Run the tests
         run: ./vendor/phpunit/phpunit tests/*
