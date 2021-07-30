@@ -25,6 +25,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Run the tests
+        run: composer install --prefer-dist --no-progress
+        
       # Runs a single command using the runners shell
       - name: Run the tests
         run: ./vendor/phpunit/phpunit tests/*
